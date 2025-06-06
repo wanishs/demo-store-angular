@@ -1,0 +1,85 @@
+<div class="product-container">
+  <h1>Product Management</h1>
+
+  <!-- Product Form -->
+  <form [formGroup]="productForm" (ngSubmit)="addOrUpdateProduct()">
+    <div class="form-group">
+      <label for="name">Product Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        placeholder="Enter product name"
+      />
+      <div
+        *ngIf="
+          productForm.get('name')?.invalid && productForm.get('name')?.touched
+        "
+        class="error"
+      >
+        <small *ngIf="productForm.get('name')?.errors?.['required']"
+          >Product name is required.</small
+        >
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input
+        type="number"
+        id="price"
+        formControlName="price"
+        placeholder="Enter product price"
+      />
+      <div
+        *ngIf="
+          productForm.get('price')?.invalid && productForm.get('price')?.touched
+        "
+        class="error"
+      >
+        <small *ngIf="productForm.get('price')?.errors?.['required']"
+          >Price is required.</small
+        >
+        <small *ngIf="productForm.get('price')?.errors?.['min']"
+          >Price must be greater than 0.</small
+        >
+      </div>
+    </div>
+    <button type="submit" class="submit-btn" [disabled]="productForm.invalid">
+      {{ isEditMode ? "Update Product" : "Add Product" }}
+    </button>
+    <button
+      type="button"
+      class="reset-btn"
+      (click)="resetForm()"
+      *ngIf="isEditMode"
+    >
+      Cancel
+    </button>
+  </form>
+
+  <!-- Product List -->
+  <div class="product-list">
+    <h2>Product List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price | currency }}</td>
+          <td>
+            <button (click)="editProduct(product)">Edit</button>
+            <button (click)="deleteProduct(product.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
