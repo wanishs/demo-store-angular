@@ -9,7 +9,7 @@ import { ProductService } from './product.service';
 })
 export class ProductComponent implements OnInit {
   productForm: FormGroup;
-  products: { id: number; name: string; price: number }[] = [];
+  products:any //: { id: number; name: string; price: number }[] = [];
   isEditMode = false;
   editProductId: number | null = null;
 
@@ -30,8 +30,8 @@ export class ProductComponent implements OnInit {
   // Fetch all products
   getProducts() {
     this.productService.getProducts().subscribe(
-      (response) => {
-        this.products = response;
+      (response: any) => {
+        this.products = response.data || [];
       },
       (error) => {
         console.error('Error fetching products:', error);

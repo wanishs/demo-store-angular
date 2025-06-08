@@ -7,38 +7,40 @@ import { Observable } from "rxjs";
 })
 export class ProductService {
   private apiUrl = "http://localhost:3000"; // Replace with your API URL
-  private token: string | null = localStorage.getItem("token");
 
   constructor(private http: HttpClient) {}
 
   // Create a new product
-  createProduct(product: { name: string; price: number }): Observable<any> {
-    if (!this.token) {
+  createProduct(product: { name: string; desc: string, price: number }): Observable<any> {
+    product.desc = 'test';
+    const token = localStorage.getItem("token");
+    if (!token) {
       throw new Error("No authentication token found");
     }
     // Set the authorization header with the token
     const headers = {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     };
     // Include headers in the request
-    this.http.options(this.apiUrl, { headers });
+    // this.http.options(this.apiUrl, { headers });
     // Post the product data to the API
-    return this.http.post(this.apiUrl, product);
+    return this.http.post(this.apiUrl + '/api/product/create', product, {headers});
   }
 
   // Get all products
   getProducts(): Observable<any[]> {
-    if (!this.token) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       throw new Error("No authentication token found");
     }
     // Set the authorization header with the token
     const headers = {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     };
     // Include headers in the request
     this.http.options(this.apiUrl, { headers });
     // Post the product data to the API
-    return this.http.get<any[]>(this.apiUrl + "/api/product/list");
+    return this.http.get<any[]>(this.apiUrl + "/api/product/list", { headers });
   }
 
   // Update a product
@@ -46,31 +48,33 @@ export class ProductService {
     id: number,
     product: { name: string; price: number }
   ): Observable<any> {
-    if (!this.token) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       throw new Error("No authentication token found");
     }
     // Set the authorization header with the token
     const headers = {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     };
     // Include headers in the request
     this.http.options(this.apiUrl, { headers });
     // Post the product data to the API
-    return this.http.put(`${this.apiUrl}/${id}`, product);
+    return this.http.put(`${this.apiUrl + '/api/product'}/${id}`, product, {headers});
   }
 
   // Delete a product
   deleteProduct(id: number): Observable<any> {
-    if (!this.token) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       throw new Error("No authentication token found");
     }
     // Set the authorization header with the token
     const headers = {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     };
     // Include headers in the request
     this.http.options(this.apiUrl, { headers });
     // Post the product data to the API
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl + '/api/product'}/${id}`, { headers });
   }
 }

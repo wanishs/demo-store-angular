@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private router: Router,
   ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit {
           console.log('Login successful', response);
           if (response.token) {
             localStorage.setItem('token', response.token); // Store token in local storage
+            this.router.navigate(['/product']); // Navigate to home page after successful login
           }
           // Handle successful login, e.g., redirect to home page or dashboard
         },
